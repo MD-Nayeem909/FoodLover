@@ -15,10 +15,10 @@ const Hero = () => {
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 2500,
+        //   disableOnInteraction: false,
+        // }}
         pagination={{
           clickable: true,
         }}
@@ -55,10 +55,10 @@ const Hero = () => {
             </div>
             <div className="gap-4 flex">
               <Link to="/all-products" className="btn btn-primary">
-                Watch All Products
+                Watch All Reviews
               </Link>
               <Link to="/create-product" className="btn btn-outline-gradient">
-                Post an Product
+                Add Review
               </Link>
             </div>
           </section>
