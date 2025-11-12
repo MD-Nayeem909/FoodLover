@@ -11,12 +11,13 @@ import ReviewDetails from "../Pages/ReviewDetails";
 import MyReviews from "../Pages/MyReviews";
 import CreateReview from "../Pages/CreateReview";
 import EditReview from "../Pages/EditReview";
+import PageNotFound from "../ErrorPage/PageNotFound";
 
 const Router = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout />,
-    errorElement: <div>Error occurred!</div>,
+    errorElement: <PageNotFound />,
     hydrateFallbackElement: <div>Loading...</div>,
     children: [
       {

@@ -2,10 +2,10 @@ import { Heart, MapPin } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 
-const ReviewCard = ({ review, handleFavoriteToggle,isFavorite=false }) => {
+const ReviewCard = ({ review, handleFavoriteToggle, isFavorite = false }) => {
   const [isFavorited, setIsFavorited] = useState(isFavorite);
   return (
-    <section>
+    <section key={review._id}>
       <div className="card overflow-hidden group bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
         {/* Image */}
         <div className="relative h-70 overflow-hidden bg-gray-200">
@@ -18,7 +18,7 @@ const ReviewCard = ({ review, handleFavoriteToggle,isFavorite=false }) => {
           <button
             onClick={() => {
               setIsFavorited(!isFavorited);
-              handleFavoriteToggle(review.id, isFavorited);
+              handleFavoriteToggle(review._id, isFavorited);
             }}
             className="absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 opacity-70 hover:opacity-100 transition-opacity"
           >
@@ -72,7 +72,7 @@ const ReviewCard = ({ review, handleFavoriteToggle,isFavorite=false }) => {
               by {review.reviewerName}
             </p>
             <Link
-              to={`/review-details/${review.id}`}
+              to={`/review-details/${review._id}`}
               state={review}
               className="text-gradient hover:btn-primary btn text-sm font-semibold"
             >

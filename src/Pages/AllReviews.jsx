@@ -1,50 +1,9 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ReviewCard from "../Components/ReviewCard";
 import Container from "../Utility/Container";
 import { Filter, Search } from "lucide-react";
-
-const allReviews = [
-  {
-    id: 1,
-    foodName: "Burger",
-    restaurantName: "McDonalds",
-    location: "Dhaka",
-    rating: 4,
-    reviewerName: "John Doe",
-    image:
-      "https://www.lurch.de/media/b5/4c/70/1693989554/burger-classic-cheese-rezept.jpg?ts=1753774543",
-    tags: ["Burger", "Fast Food", "Cheese"],
-    reviewText:
-      "This is a great burger. The patty is juicy and the buns are crispy. The cheese is melty and the sauce is delicious. I highly recommend this place!",
-    favorites: [],
-  },
-  {
-    id: 2,
-    foodName: "Pizza",
-    restaurantName: "Dominos",
-    location: "Dhaka",
-    rating: 5,
-    reviewerName: "Jane Smith",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s",
-    tags: ["Pizza", "Italian", "Vegetarian"],
-    reviewText:
-      "This is a great pizza. The toppings are fresh and the crust is crispy. The sauce is flavorful and the cheese is melty. I highly recommend this place!",
-  },
-  {
-    id: 3,
-    foodName: "Sushi",
-    restaurantName: "Sushi Place",
-    location: "Dhaka",
-    rating: 4,
-    reviewerName: "John Doe",
-    image:
-      "https://www.craftycookbook.com/wp-content/uploads/2024/03/tobiko-roll-1200.jpg",
-    tags: ["Sushi", "Japanese", "Fresh"],
-    reviewText:
-      "This is a great sushi. The rolls are fresh and the fish is fresh. The sauce is flavorful and the seaweed is fresh. I highly recommend this place!",
-  },
-];
+import useService from "../Hooks/useService";
+import Loading from "../Utility/Loading";
 
 const AllReviews = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,6 +11,9 @@ const AllReviews = () => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+
+  const { data, loading } = useService("http://localhost:3000/api/reviews");
+  const allReviews = data.data || [];
 
   const filteredReviews = useMemo(() => {
     let filtered = allReviews;
@@ -89,7 +51,7 @@ const AllReviews = () => {
     }
 
     return filtered;
-  }, [searchTerm, sortBy, selectedRating, selectedLocation]);
+  }, [allReviews, searchTerm, sortBy, selectedRating, selectedLocation]);
 
   const uniqueLocations = [
     ...new Set(allReviews.map((r) => r.location)),
@@ -105,7 +67,7 @@ const AllReviews = () => {
             All Reviews:
             <span className="text-gradient"> {allReviews.length}</span>
           </h2>
-          <p className="text-accent mb-8">
+          <p className="text-accent mb-8 animate-bounce">
             Browse all food reviews from our community
           </p>
         </div>
@@ -115,6 +77,8 @@ const AllReviews = () => {
             <Search className="absolute left-3 top-3.5 text-accent" size={20} />
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by food, restaurant, or location..."
               className="w-full pl-10 pr-4 py-3 border border-border border-gray-300 bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent rounded-lg  "
             />
@@ -251,34 +215,42 @@ const AllReviews = () => {
           </div>
 
           {/* Reviews Grid */}
-          <div className="lg:col-span-3">
-            {filteredReviews.length === 0 ? (
-              <div className="card p-12 text-center">
-                <h2 className="text-2xl font-bold mb-2 text-text-primary">
-                  No reviews found
-                </h2>
-                <p className="text-text-secondary mb-6">
-                  Try adjusting your search or filter criteria
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSelectedRating(null);
-                    setSelectedLocation(null);
-                  }}
-                  className="btn-primary inline-block"
-                >
-                  Clear Filters
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredReviews.map((review) => (
-                  <ReviewCard key={review.id} review={review} />
-                ))}
-              </div>
-            )}
-          </div>
+          {!loading ? (
+            <div className="lg:col-span-3">
+              {filteredReviews && filteredReviews.length === 0 ? (
+                <div className="card p-12 text-center">
+                  <h2 className="text-2xl font-bold mb-2 text-text-primary">
+                    No reviews found
+                  </h2>
+                  <p className="text-text-secondary mb-6">
+                    Try adjusting your search or filter criteria
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSelectedRating(null);
+                      setSelectedLocation(null);
+                    }}
+                    className="btn-primary flex mx-auto w-fit"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredReviews.map((review) => (
+                    <div key={review._id}>
+                      <ReviewCard review={review} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="md:col-3">
+              <Loading />
+            </div>
+          )}
         </div>
       </div>
     </Container>

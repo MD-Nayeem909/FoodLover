@@ -2,18 +2,22 @@ import React from "react";
 
 const Loading = () => {
   return (
-    <div className="flex flex-col justify-center items-center  col-span-12 w-full bg-base-200 min-h-[calc(100vh-800px)]">
+    <div className="flex flex-col justify-center items-center w-full mx-auto bg-base-200 animate-pulse">
       <lord-icon
         src="https://cdn.lordicon.com/kixubvkn.json"
         trigger="loop"
-        delay="500"
-        state="hover-wrong"
+        delay="100"
         colors="primary:#632EE3,secondary:#9F62F2"
-        style={{ width: "100px", height: "100px" }}
+        style={{ width: "120px", height: "120px" }}
       ></lord-icon>
-      <h2 className="text-md font-semibold text-center text-accent ">
+
+      <h2 className="text-lg font-semibold text-center text-accent mt-3 tracking-wide">
         Reviews in Progress...
       </h2>
+
+      <p className="text-sm text-text-secondary mt-1">
+        Please wait while we load the best bites 🍔
+      </p>
     </div>
   );
 };
