@@ -47,11 +47,11 @@ const MyReviews = () => {
     },
   ]);
 
-  const handleDelete = (id) => {
-    if (confirm("Are you sure you want to delete this review?")) {
-      setReviews(reviews.filter((r) => r.id !== id));
-    }
+  const handleDeleteReview = (id) => {
+    const updatedReviews = reviews.filter((review) => review.id !== id);
+    setReviews(updatedReviews);
   };
+
   return (
     <Container>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
@@ -89,7 +89,7 @@ const MyReviews = () => {
               <MyReviewCard
                 key={review.id}
                 review={review}
-                onDelete={() => handleDelete(review.id)}
+                myFavoriteDelete={handleDeleteReview}
               />
             ))}
           </div>

@@ -7,7 +7,9 @@ import DeleteModal from "../Utility/DeleteModal";
 
 const ReviewDetails = () => {
   const locationData = useLocation();
+
   const navigate = useNavigate();
+  const from = locationData.state?.from?.pathname || "/all-reviews";
 
   const [isFavorited, setIsFavorited] = useState(false);
   const reviewData = locationData?.state?.review || locationData?.state;
@@ -69,8 +71,10 @@ const ReviewDetails = () => {
         <div>
           <div className="px-6 md:px-0">
             <Link
-              to="/"
+              to={from}
+              state={{ from: location, review: reviewData }}
               className="flex gap-2 font-semibold text-accent items-center"
+
             >
               <ArrowLeft />
               Back to Reviews
@@ -88,7 +92,7 @@ const ReviewDetails = () => {
             </div>
 
             <div className="flex gap-3">
-              {tags.map((tag) => (
+              {Array.isArray(tags) && tags.map((tag) => (
                 <button
                   key={tag}
                   className="rounded-full btn bg-[#9F62F230] btn-sm"

@@ -1,7 +1,23 @@
 import { Edit2, Trash2 } from "lucide-react";
 import { Link } from "react-router";
+import DeleteModal from "../Utility/DeleteModal";
+import axios from "axios";
 
-const MyReviewCard = ({review}) => {
+const MyReviewCard = ({ review, myFavoriteDelete }) => {
+  const handleRemoveReview = (id) => {
+    DeleteModal(function () {
+      axios
+        .delete(`http://localhost:3000/api/reviews/${id}`)
+        .then((response) => {
+          if (myFavoriteDelete) {
+            myFavoriteDelete(id);
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting review:", error);
+        });
+    });
+  };
   return (
     <div
       key={review.id}
@@ -64,7 +80,7 @@ const MyReviewCard = ({review}) => {
               Edit
             </Link>
             <button
-              onClick={() => handleDelete(review.id)}
+              onClick={() => handleRemoveReview(review.id)}
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200 text-sm font-medium"
             >
               <Trash2 size={16} />

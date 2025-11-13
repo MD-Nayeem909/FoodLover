@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 const DiscoverFlavors = () => {
   return (
-    <section className="hero bg-linear-to-tl from-[#E0F8F5] to-[#FFE6FD] to-100% lg:p-20 rounded-lg">
+    <section className="hero bg-linear-to-tl from-[#E0F8F5] to-[#FFE6FD] to-100% lg:p-10 rounded-lg">
       <div className="flex flex-col justify-between items-center gap-4 lg:gap-8 p-10">
         <div className="text-center space-y-4">
           <h2 className="text-3xl text-gradient lg:text-7xl font-bold">

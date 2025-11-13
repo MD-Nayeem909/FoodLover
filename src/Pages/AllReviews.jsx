@@ -63,7 +63,7 @@ const AllReviews = () => {
     <Container>
       <div className="my-20">
         <div>
-          <h2 className="text-5xl font-bold mb-4">
+          <h2 className="text-4xl font-bold mb-2">
             All Reviews:
             <span className="text-gradient"> {allReviews.length}</span>
           </h2>
