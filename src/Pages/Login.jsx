@@ -9,7 +9,7 @@ import passwordValidation from '../Utility/passwordValidation';
 import axios from 'axios';
 
 const Login = () => {
-	const { user, setUser, googleSignIn } = useAuth();
+	const { user, setUser, googleSignIn, setLoading } = useAuth();
 
 	const [showPassword, setShowPassword] = useState(false);
 	const [email, setEmail] = useState('');
@@ -37,8 +37,8 @@ const Login = () => {
 					const token = res.data.token;
 					if (token) {
 						localStorage.setItem('token', token);
-						localStorage.setItem('authUser', JSON.stringify(res.data.user));
 						setUser(res.data.user);
+						setLoading(false);
 					} else {
 						alert('No token received');
 					}

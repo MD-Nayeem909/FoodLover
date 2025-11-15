@@ -65,6 +65,11 @@ const Router = createBrowserRouter([
 		element: <AuthLayout />,
 		errorElement: <div>Error occurred!</div>,
 		hydrateFallbackElement: <div>Loading...</div>,
+		loader: ({ request }) => {
+			if (localStorage.getItem('token')) {
+				throw redirect('/');
+			}
+		},
 		children: [
 			{
 				path: '/auth/login',

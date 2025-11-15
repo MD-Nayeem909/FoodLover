@@ -12,12 +12,14 @@ import {
 } from 'firebase/auth';
 import { AuthContext } from './AuthContext.jsx';
 import app from '../Firebase/firebase.config.js';
+import api from '../Utility/axios.js';
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [token, setToken] = useState(null);
 
 	const createUser = (email, password) => {
 		return createUserWithEmailAndPassword(auth, email, password);
@@ -48,23 +50,32 @@ const AuthProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		// custom login user restore
-		const savedUser = localStorage.getItem('authUser');
-		if (savedUser) {
-			setUser(JSON.parse(savedUser));
-			setLoading(false);
-		}
-	}, []);
+		const token = localStorage.getItem('token');
 
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-			if (!localStorage.getItem('authUser')) {
+		if (token) {
+			api.get('/user/me')
+				.then((res) => {
+					const userData = res.data.user;
+					setUser(userData);
+				})
+				.catch((err) => {
+					console.log('error', err);
+					localStorage.removeItem('token');
+					setUser(null);
+				})
+				.finally(() => {
+					setLoading(false);
+				});
+		} else {
+			const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
 				setUser(currentUser);
-			}
+				setLoading(false);
+			});
 			setLoading(false);
-		});
-		return () => unsubscribe();
-	}, []);
+			return () => unsubscribe();
+		}
+	}, [localStorage.getItem('token')]);
+
 	const authData = {
 		user,
 		setUser,
@@ -72,6 +83,7 @@ const AuthProvider = ({ children }) => {
 		existingUser,
 		logoutUser,
 		loading,
+		setLoading,
 		googleSignIn,
 		updateUserData,
 		deleteAccount,

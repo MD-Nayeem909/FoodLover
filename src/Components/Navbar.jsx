@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React from 'react';
 import { Link, NavLink } from 'react-router';
 import Container from '../Utility/Container';
 import { Heart, LogOut } from 'lucide-react';
@@ -6,28 +6,15 @@ import { useTheme } from '../Providers/ThemeProvider';
 import { useAuth } from '../Providers/AuthContext';
 
 const Navbar = () => {
-	const { user, setUser, logoutUser } = useAuth();
+	const { user, setUser, logoutUser, loading } = useAuth();
 	const { theme, toggleTheme } = useTheme();
 
 	const handleLogout = async () => {
 		await logoutUser();
 		localStorage.removeItem('token');
-		localStorage.removeItem('authUser');
 		setUser(null);
 		window.location.href = '/';
 	};
-
-	useEffect(() => {
-		const localStorageUser = localStorage.getItem('authUser');
-		try {
-			const data = JSON.parse(localStorageUser);
-			if (localStorageUser) {
-				setUser(data);
-			}
-		} catch (error) {
-			console.error('Error parsing JSON:', error);
-		}
-	}, []);
 
 	const links = (
 		<>
@@ -92,7 +79,7 @@ const Navbar = () => {
 								</svg>
 							</label>
 						</div>
-						{user ? (
+						{!loading && user ? (
 							<div className="flex items-center gap-5 dropdown-end">
 								<div className="dropdown dropdown-end">
 									<div tabIndex={0} className=" m-1">
@@ -104,7 +91,7 @@ const Navbar = () => {
 											</div>
 										</Link>
 									</div>
-									<ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+									<ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
 										<li>
 											<NavLink to="/my-reviews">My Reviews</NavLink>
 										</li>
